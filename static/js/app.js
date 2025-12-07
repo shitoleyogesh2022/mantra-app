@@ -13,6 +13,7 @@ document.querySelectorAll('.tab').forEach(tab => {
         if (tab.dataset.tab === 'calendar') loadCalendar();
         if (tab.dataset.tab === 'astro') loadAstrology();
         if (tab.dataset.tab === 'library') loadAllMantras();
+        if (tab.dataset.tab === 'manifest') loadManifestation();
     });
 });
 
@@ -85,6 +86,7 @@ function createMantraCard(mantra) {
             <div style="margin-top: 15px; color: #666; font-size: 0.9em;">
                 <strong>Benefits:</strong> ${mantra.benefits}
             </div>
+            <button class="chant-counter-btn" onclick="openCounter('${mantra.name.replace(/'/g, "\\'")}')">📿 Start Chanting (108x)</button>
         </div>
     `;
 }
@@ -289,9 +291,147 @@ timeToggle.addEventListener('mouseleave', () => {
     }
 });
 
+// Manifestation Section
+async function loadManifestation() {
+    const response = await fetch('/api/manifestation');
+    const data = await response.json();
+    
+    // Magic Time Alert
+    if (data.is_magic_time) {
+        document.getElementById('magic-time').innerHTML = `
+            ✨ MAGIC TIME ALERT! ✨<br>
+            ${data.current_time} - ${data.magic_message}
+        `;
+    } else {
+        document.getElementById('magic-time').innerHTML = `
+            🕰️ Next Magic Time: ${data.next_magic_time}
+        `;
+    }
+    
+    // Angel Numbers
+    document.getElementById('angel-numbers').innerHTML = data.angel_numbers.map(num => `
+        <div class="magic-number" title="${num.meaning}">${num.number}</div>
+    `).join('');
+    
+    // Power Hours
+    document.getElementById('power-hours').innerHTML = data.power_hours.map(hour => `
+        <div class="power-hour-item">
+            <strong>${hour.time}</strong><br>
+            ${hour.activity}
+        </div>
+    `).join('');
+    
+    // Moon Manifestation
+    document.getElementById('moon-manifest').innerHTML = `
+        <div style="font-size: 3em; margin: 15px 0;">${data.moon_phase.emoji}</div>
+        <h4 style="margin: 10px 0;">${data.moon_phase.name}</h4>
+        <p style="line-height: 1.6;">${data.moon_phase.manifestation}</p>
+    `;
+    
+    // Daily Affirmation
+    document.getElementById('daily-affirmation').innerHTML = `
+        <p style="font-size: 1.2em; line-height: 1.8; font-style: italic;">
+            "${data.affirmation}"
+        </p>
+    `;
+    
+    // Ritual Steps
+    document.getElementById('ritual-steps').innerHTML = data.ritual.map((step, i) => `
+        <div class="ritual-step">
+            <strong>Step ${i + 1}:</strong> ${step}
+        </div>
+    `).join('');
+}
+
+// Mantra Counter
+let counterValue = 0;
+let currentMantra = '';
+
+function openCounter(mantraName) {
+    currentMantra = mantraName;
+    counterValue = 0;
+    document.getElementById('counter-mantra-name').textContent = mantraName;
+    document.getElementById('counter-number').textContent = '0';
+    document.getElementById('counter-progress').style.width = '0%';
+    document.getElementById('counter-modal').style.display = 'flex';
+    document.getElementById('counter-btn').disabled = false;
+}
+
+function incrementCounter() {
+    if (counterValue < 108) {
+        counterValue++;
+        document.getElementById('counter-number').textContent = counterValue;
+        const progress = (counterValue / 108) * 100;
+        document.getElementById('counter-progress').style.width = progress + '%';
+        
+        // Vibration feedback on mobile
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+        
+        // Celebration at 108
+        if (counterValue === 108) {
+            document.getElementById('counter-btn').disabled = true;
+            document.getElementById('counter-number').style.animation = 'celebrate 1s ease-in-out';
+            setTimeout(() => {
+                alert('🎉 Congratulations! You completed 108 chants! 🙏');
+            }, 500);
+        }
+    }
+}
+
+function resetCounter() {
+    counterValue = 0;
+    document.getElementById('counter-number').textContent = '0';
+    document.getElementById('counter-progress').style.width = '0%';
+    document.getElementById('counter-btn').disabled = false;
+    document.getElementById('counter-number').style.animation = '';
+}
+
+// Close modal
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('counter-modal');
+    const closeBtn = document.querySelector('.counter-close');
+    
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
+    
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+        if (modal.style.display === 'flex') {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                incrementCounter();
+            } else if (e.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        }
+    });
+});
+
 // Initialize
 loadToday();
 loadPanchang();
+
+// Check for magic time every minute
+setInterval(() => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const time = `${hours}:${minutes}`;
+    
+    const magicTimes = ['11:11', '22:22', '00:00', '12:12', '13:13', '14:14', '15:15', '21:21', '23:23'];
+    
+    if (magicTimes.includes(time)) {
+        // Reload manifestation if on that tab
+        const manifestTab = document.getElementById('manifest');
+        if (manifestTab && manifestTab.classList.contains('active')) {
+            loadManifestation();
+        }
+    }
+}, 60000);
 
 // Note: The backend currently uses Vedic time by default (USE_VEDIC_TIME = True in app.py)
 // This toggle is informational - showing users which system is being used

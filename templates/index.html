@@ -25,6 +25,7 @@
 
         <nav class="tabs">
             <button class="tab active" data-tab="today">Today's Mantra</button>
+            <button class="tab" data-tab="manifest">✨ Manifestation</button>
             <button class="tab" data-tab="calendar">Calendar</button>
             <button class="tab" data-tab="astro">Astrology</button>
             <button class="tab" data-tab="library">Mantra Library</button>
@@ -45,6 +46,42 @@
                 <div class="planet-highlight" id="strongest-planet"></div>
             </div>
             <div id="today-mantras" class="mantra-grid"></div>
+        </div>
+
+        <div id="manifest" class="tab-content">
+            <div class="manifest-header">
+                <h2>✨ Manifestation Portal</h2>
+                <p class="manifest-tagline">Align with cosmic energies & magic numbers</p>
+            </div>
+            
+            <div class="magic-time" id="magic-time"></div>
+            
+            <div class="manifest-grid">
+                <div class="manifest-card angel-numbers">
+                    <h3>🔢 Today's Magic Numbers</h3>
+                    <div id="angel-numbers" class="number-display"></div>
+                </div>
+                
+                <div class="manifest-card power-hours">
+                    <h3>⏰ Power Hours</h3>
+                    <div id="power-hours"></div>
+                </div>
+                
+                <div class="manifest-card moon-manifest">
+                    <h3>🌙 Moon Manifestation</h3>
+                    <div id="moon-manifest"></div>
+                </div>
+                
+                <div class="manifest-card affirmations">
+                    <h3>💫 Today's Affirmation</h3>
+                    <div id="daily-affirmation"></div>
+                </div>
+            </div>
+            
+            <div class="manifest-ritual">
+                <h3>🕉️ Manifestation Ritual for Today</h3>
+                <div id="ritual-steps"></div>
+            </div>
         </div>
 
         <div id="calendar" class="tab-content">
@@ -69,6 +106,23 @@
                 <input type="text" id="search" placeholder="Search mantras by deity, category, or benefits...">
             </div>
             <div id="all-mantras" class="mantra-grid"></div>
+        </div>
+    </div>
+
+    <!-- Mantra Counter Modal -->
+    <div id="counter-modal" class="counter-modal">
+        <div class="counter-content">
+            <span class="counter-close">&times;</span>
+            <h2 id="counter-mantra-name"></h2>
+            <div class="counter-display">
+                <div class="counter-number" id="counter-number">0</div>
+                <div class="counter-target">/ 108</div>
+            </div>
+            <button class="counter-btn" id="counter-btn" onclick="incrementCounter()">🙏 Chant</button>
+            <div class="counter-progress">
+                <div class="counter-progress-bar" id="counter-progress"></div>
+            </div>
+            <button class="counter-reset" onclick="resetCounter()">🔄 Reset</button>
         </div>
     </div>
 

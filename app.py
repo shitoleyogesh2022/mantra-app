@@ -617,6 +617,159 @@ def panchang(date_str):
         'weekday': date.strftime('%A')
     })
 
+@app.route('/api/manifestation')
+def manifestation_data():
+    """Gen Z manifestation portal with magic numbers and cosmic timing"""
+    now = datetime.now()
+    today = get_vedic_date() if USE_VEDIC_TIME else now
+    
+    # Check if current time is a magic time
+    current_time = now.strftime('%H:%M')
+    magic_times = {
+        '00:00': 'Midnight Magic - New beginnings manifest',
+        '01:11': 'Angel Number 111 - New opportunities arriving',
+        '02:22': 'Angel Number 222 - Balance and harmony',
+        '03:33': 'Angel Number 333 - Divine guidance present',
+        '04:44': 'Angel Number 444 - Angels protecting you',
+        '05:55': 'Angel Number 555 - Major changes coming',
+        '11:11': 'ULTIMATE MANIFESTATION TIME - Make a wish!',
+        '12:12': 'Angel Number 1212 - Spiritual awakening',
+        '13:13': 'Cosmic alignment - Trust the universe',
+        '14:14': 'Angel Number 1414 - Stay positive',
+        '15:15': 'Angel Number 1515 - Life changes ahead',
+        '21:21': 'Angel Number 2121 - Dreams manifesting',
+        '22:22': 'POWERFUL MANIFESTATION - Universe listening',
+        '23:23': 'Angel Number 2323 - Ascended masters near'
+    }
+    
+    is_magic = current_time in magic_times
+    magic_message = magic_times.get(current_time, '')
+    
+    # Find next magic time
+    next_magic = None
+    current_minutes = now.hour * 60 + now.minute
+    for time_str in sorted(magic_times.keys()):
+        h, m = map(int, time_str.split(':'))
+        time_minutes = h * 60 + m
+        if time_minutes > current_minutes:
+            next_magic = time_str
+            break
+    if not next_magic:
+        next_magic = '00:00 (tomorrow)'
+    
+    # Today's angel numbers based on date
+    day_num = today.day
+    month_num = today.month
+    year_num = today.year
+    
+    angel_numbers = [
+        {'number': '111', 'meaning': 'New beginnings, manifestation power'},
+        {'number': '222', 'meaning': 'Balance, trust the process'},
+        {'number': '333', 'meaning': 'Divine guidance, ascended masters'},
+        {'number': '444', 'meaning': 'Angels are with you, stability'},
+        {'number': '555', 'meaning': 'Major life changes, transformation'},
+        {'number': '777', 'meaning': 'Spiritual awakening, luck'},
+        {'number': '888', 'meaning': 'Abundance, financial blessings'},
+        {'number': '999', 'meaning': 'Completion, new chapter beginning'}
+    ]
+    
+    # Select 3 angel numbers for today
+    selected_angels = [
+        angel_numbers[day_num % len(angel_numbers)],
+        angel_numbers[month_num % len(angel_numbers)],
+        angel_numbers[(day_num + month_num) % len(angel_numbers)]
+    ]
+    
+    # Power hours based on planetary positions
+    planets = get_planet_positions(today)
+    strongest = max(planets.items(), key=lambda x: x[1]['strength'])[0]
+    
+    power_hours = [
+        {'time': '4:00 AM - 6:00 AM', 'activity': '🌅 Brahma Muhurta - Most powerful for manifestation & meditation'},
+        {'time': '11:11 AM', 'activity': '✨ Make a wish - Universe portal opens'},
+        {'time': '12:00 PM - 1:00 PM', 'activity': f'☀️ {strongest} energy peak - Channel this power'},
+        {'time': '6:00 PM - 7:00 PM', 'activity': '🌙 Twilight magic - Set intentions for tomorrow'},
+        {'time': '10:00 PM - 11:00 PM', 'activity': '⭐ Manifestation journaling - Write your desires'}
+    ]
+    
+    # Moon manifestation guidance
+    moon = get_moon_phase(today)
+    moon_manifestations = {
+        'New Moon': 'Perfect for setting NEW intentions. Plant seeds of desires. Start fresh manifestations.',
+        'Waxing Crescent': 'Take action on your intentions. Energy is building. Stay focused on goals.',
+        'First Quarter': 'Overcome obstacles. Push through challenges. Your manifestations are growing.',
+        'Waxing Gibbous': 'Refine and adjust. Almost there! Fine-tune your manifestations.',
+        'Full Moon': 'PEAK MANIFESTATION POWER! Release what no longer serves. Celebrate wins.',
+        'Waning Gibbous': 'Gratitude time. Thank the universe. Share your abundance.',
+        'Last Quarter': 'Let go and release. Forgive. Clear space for new manifestations.',
+        'Waning Crescent': 'Rest and reflect. Surrender to the universe. Trust the timing.'
+    }
+    
+    moon['manifestation'] = moon_manifestations.get(moon['name'], 'Trust the cosmic timing')
+    
+    # Daily affirmations based on day of week
+    affirmations = {
+        'Monday': 'I am aligned with the flow of abundance. Money comes to me easily and effortlessly.',
+        'Tuesday': 'I am powerful, confident, and unstoppable. I overcome every obstacle with grace.',
+        'Wednesday': 'I communicate my truth clearly. My words manifest my reality.',
+        'Thursday': 'I am blessed with wisdom and prosperity. Opportunities flow to me naturally.',
+        'Friday': 'I am worthy of love, beauty, and all good things. I attract positive relationships.',
+        'Saturday': 'I release all that no longer serves me. I am free and empowered.',
+        'Sunday': 'I shine my light brightly. I am confident, radiant, and successful.'
+    }
+    
+    day_name = today.strftime('%A')
+    affirmation = affirmations.get(day_name, 'I am a powerful manifestor. The universe supports me.')
+    
+    # Manifestation ritual steps
+    nakshatra = get_nakshatra(today.timetuple().tm_yday)
+    ritual = [
+        f'🧘 Morning: Chant today\'s mantra 108 times during {nakshatra} nakshatra energy',
+        f'📝 Write your top 3 desires as if they\'re already true (present tense)',
+        f'🕯️ Light a candle at {next_magic} and visualize your dreams for 5 minutes',
+        f'💎 Carry a crystal or wear {get_lucky_color(day_name)} color today',
+        f'🙏 Before sleep: Express gratitude for 3 things that manifested today',
+        f'✨ Repeat angel number {selected_angels[0]["number"]} throughout the day for alignment'
+    ]
+    
+    return jsonify({
+        'current_time': now.strftime('%I:%M %p'),
+        'is_magic_time': is_magic,
+        'magic_message': magic_message,
+        'next_magic_time': next_magic,
+        'angel_numbers': selected_angels,
+        'power_hours': power_hours,
+        'moon_phase': moon,
+        'affirmation': affirmation,
+        'ritual': ritual,
+        'lucky_number': (day_num + month_num) % 9 + 1,
+        'manifestation_score': calculate_manifestation_score(planets, moon)
+    })
+
+def get_lucky_color(day_name):
+    """Get lucky color for manifestation"""
+    colors = {
+        'Monday': 'white or silver',
+        'Tuesday': 'red or orange',
+        'Wednesday': 'green',
+        'Thursday': 'yellow or gold',
+        'Friday': 'pink or white',
+        'Saturday': 'black or blue',
+        'Sunday': 'orange or gold'
+    }
+    return colors.get(day_name, 'white')
+
+def calculate_manifestation_score(planets, moon):
+    """Calculate today's manifestation power score"""
+    # Average planetary strength
+    avg_strength = sum(p['strength'] for p in planets.values()) / len(planets)
+    
+    # Moon phase bonus
+    moon_bonus = 20 if moon['name'] in ['Full Moon', 'New Moon'] else 0
+    
+    score = min(100, int(avg_strength + moon_bonus))
+    return f"{score}% - {'🔥 EXTREMELY POWERFUL' if score > 80 else '✨ Good energy' if score > 60 else '💫 Moderate power'}"
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
