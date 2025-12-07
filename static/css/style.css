@@ -49,6 +49,86 @@ header h1 {
     opacity: 0.9;
 }
 
+.time-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.time-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s;
+}
+
+.time-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+.time-btn.vedic {
+    background: rgba(255,200,100,0.4);
+    border-color: #ffd700;
+}
+
+.sun-times {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.sun-time {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.time-info {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.85em;
+    text-align: center;
+}
+
+.location-info {
+    color: var(--purple);
+    font-size: 0.9em;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.festival-banner {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    margin: 15px 0;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    animation: festivalPulse 2s infinite;
+}
+
+@keyframes festivalPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.moon-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-size: 1em;
+}
+
 .tabs {
     display: flex;
     background: var(--dark);
@@ -260,6 +340,7 @@ header h1 {
     cursor: pointer;
     transition: all 0.3s;
     min-height: 100px;
+    position: relative;
 }
 
 .calendar-day:hover {
@@ -271,6 +352,35 @@ header h1 {
 .calendar-day.selected {
     background: var(--primary);
     color: white;
+}
+
+.calendar-day.festival-day {
+    background: linear-gradient(135deg, #ffe8cc, #ffd699);
+    border: 2px solid var(--primary);
+}
+
+.calendar-day.purnima-day {
+    background: linear-gradient(135deg, #e8f4f8, #d4e9f7);
+    border: 2px solid #1982c4;
+}
+
+.calendar-day.amavasya-day {
+    background: linear-gradient(135deg, #e8e8e8, #d4d4d4);
+    border: 2px solid #666;
+}
+
+.festival-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2em;
+}
+
+.moon-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 1.2em;
 }
 
 .day-number {

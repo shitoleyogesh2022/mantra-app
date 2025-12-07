@@ -378,6 +378,16 @@ def today_mantra():
     current_time = datetime.now()
     time_info = f"Vedic Time (Day starts at sunrise)" if USE_VEDIC_TIME else "Standard Time (Day starts at midnight)"
     
+    # Get location and calculate sunrise/sunset
+    lat, lon, city = get_user_location()
+    sunrise, sunset = calculate_sun_times(today, lat, lon)
+    
+    # Get moon phase
+    moon = get_moon_phase(today)
+    
+    # Check for festivals
+    festival = get_hindu_festivals(today)
+    
     return jsonify({
         'date': today.strftime('%Y-%m-%d'),
         'day': day_name,
@@ -387,9 +397,115 @@ def today_mantra():
         'planet_strength': planets[strongest_planet]['strength'],
         'time_system': time_info,
         'current_time': current_time.strftime('%I:%M %p'),
+        'sunrise': sunrise,
+        'sunset': sunset,
+        'location': city,
+        'moon_phase': moon,
+        'festival': festival,
         'mantras': [{'id': m[0], 'name': m[1], 'sanskrit': m[2], 'transliteration': m[3],
                      'meaning': m[4], 'category': m[5], 'deity': m[6], 'benefits': m[7]} for m in mantras]
     })
+
+def get_user_location():
+    """Get user location from IP (fallback to India)"""
+    try:
+        response = requests.get('https://ipapi.co/json/', timeout=2)
+        data = response.json()
+        return data.get('latitude', 20), data.get('longitude', 77), data.get('city', 'India')
+    except:
+        return 20, 77, 'India'  # Default to India
+
+def get_moon_phase(date):
+    """Calculate moon phase"""
+    # Known new moon: Jan 6, 2000
+    known_new_moon = datetime(2000, 1, 6, 18, 14)
+    days_since = (date - known_new_moon).days
+    lunar_month = 29.53058867  # Average lunar month
+    phase = (days_since % lunar_month) / lunar_month
+    
+    phases = [
+        (0.03, '🌑', 'New Moon', 'Amavasya'),
+        (0.22, '🌒', 'Waxing Crescent', 'Shukla Paksha'),
+        (0.28, '🌓', 'First Quarter', 'Shukla Paksha'),
+        (0.47, '🌔', 'Waxing Gibbous', 'Shukla Paksha'),
+        (0.53, '🌕', 'Full Moon', 'Purnima'),
+        (0.72, '🌖', 'Waning Gibbous', 'Krishna Paksha'),
+        (0.78, '🌗', 'Last Quarter', 'Krishna Paksha'),
+        (0.97, '🌘', 'Waning Crescent', 'Krishna Paksha'),
+        (1.0, '🌑', 'New Moon', 'Amavasya')
+    ]
+    
+    for threshold, emoji, name, vedic in phases:
+        if phase <= threshold:
+            return {'emoji': emoji, 'name': name, 'vedic': vedic, 'phase': round(phase * 100)}
+    return phases[0]
+
+def get_hindu_festivals(date):
+    """Get Hindu festivals for the year"""
+    year = date.year
+    festivals = {
+        # Major festivals (approximate dates - vary by lunar calendar)
+        'Makar Sankranti': f'{year}-01-14',
+        'Maha Shivaratri': f'{year}-02-18',
+        'Holi': f'{year}-03-25',
+        'Ram Navami': f'{year}-04-17',
+        'Hanuman Jayanti': f'{year}-04-23',
+        'Akshaya Tritiya': f'{year}-05-10',
+        'Guru Purnima': f'{year}-07-21',
+        'Raksha Bandhan': f'{year}-08-19',
+        'Krishna Janmashtami': f'{year}-08-26',
+        'Ganesh Chaturthi': f'{year}-09-07',
+        'Navratri Begins': f'{year}-10-03',
+        'Dussehra': f'{year}-10-12',
+        'Diwali': f'{year}-11-01',
+        'Govardhan Puja': f'{year}-11-02',
+        'Bhai Dooj': f'{year}-11-03',
+    }
+    
+    # Check if today is a festival
+    date_str = date.strftime('%Y-%m-%d')
+    for festival, fest_date in festivals.items():
+        if date_str == fest_date:
+            return festival
+    return None
+
+def calculate_sun_times(date, lat=None, lon=None):
+    """Calculate sunrise and sunset times based on date and location"""
+    day_of_year = date.timetuple().tm_yday
+    
+    # Get user location if not provided
+    if lat is None or lon is None:
+        lat, lon, _ = get_user_location()
+    
+    # Solar declination
+    declination = 23.45 * math.sin(math.radians((360/365) * (day_of_year - 81)))
+    
+    latitude = lat
+    
+    # Hour angle
+    cos_hour_angle = -math.tan(math.radians(latitude)) * math.tan(math.radians(declination))
+    cos_hour_angle = max(-1, min(1, cos_hour_angle))  # Clamp between -1 and 1
+    hour_angle = math.degrees(math.acos(cos_hour_angle))
+    
+    # Sunrise and sunset in decimal hours (solar noon at 12:00)
+    sunrise_decimal = 12 - (hour_angle / 15)
+    sunset_decimal = 12 + (hour_angle / 15)
+    
+    # Convert to IST (add equation of time approximation)
+    sunrise_hour = int(sunrise_decimal)
+    sunrise_min = int((sunrise_decimal - sunrise_hour) * 60)
+    
+    sunset_hour = int(sunset_decimal)
+    sunset_min = int((sunset_decimal - sunset_hour) * 60)
+    
+    sunrise_time = f"{sunrise_hour:02d}:{sunrise_min:02d} AM"
+    
+    if sunset_hour > 12:
+        sunset_time = f"{sunset_hour-12:02d}:{sunset_min:02d} PM"
+    else:
+        sunset_time = f"{sunset_hour:02d}:{sunset_min:02d} PM"
+    
+    return sunrise_time, sunset_time
 
 @app.route('/api/mantras')
 def all_mantras():
@@ -456,12 +572,19 @@ def calendar_data(year, month):
     while current <= last_day:
         nakshatra = get_nakshatra(current.timetuple().tm_yday)
         tithi = get_tithi(current)
+        festival = get_hindu_festivals(current)
+        moon = get_moon_phase(current)
+        
         days.append({
             'date': current.strftime('%Y-%m-%d'),
             'day': current.day,
             'nakshatra': nakshatra,
             'tithi': tithi,
-            'weekday': current.strftime('%A')
+            'weekday': current.strftime('%A'),
+            'festival': festival,
+            'moon_phase': moon['emoji'] if moon else None,
+            'is_purnima': moon['vedic'] == 'Purnima' if moon else False,
+            'is_amavasya': moon['vedic'] == 'Amavasya' if moon else False
         })
         current += timedelta(days=1)
     

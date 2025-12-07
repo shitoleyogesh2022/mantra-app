@@ -11,6 +11,16 @@
         <header>
             <h1>🕉️ Divine Mantras</h1>
             <p class="tagline">Ancient Wisdom for Modern Life</p>
+            <div class="time-controls">
+                <button id="time-toggle" class="time-btn" title="Toggle between Vedic (sunrise-based) and Western (midnight-based) time system">🌅 Vedic Time</button>
+                <div class="time-info" id="time-info">
+                    <small>📖 Day starts at sunrise (Vedic tradition)</small>
+                </div>
+                <div class="sun-times" id="sun-times">
+                    <span class="sun-time">🌅 Sunrise: 6:00 AM</span>
+                    <span class="sun-time">🌇 Sunset: 6:00 PM</span>
+                </div>
+            </div>
         </header>
 
         <nav class="tabs">
@@ -23,10 +33,13 @@
         <div id="today" class="tab-content active">
             <div class="date-info">
                 <h2 id="current-date"></h2>
+                <div class="location-info" id="location-info"></div>
+                <div class="festival-banner" id="festival-banner" style="display:none;"></div>
                 <div class="astro-info">
                     <span class="badge" id="nakshatra-badge"></span>
                     <span class="badge" id="tithi-badge"></span>
                     <span class="badge" id="day-badge"></span>
+                    <span class="badge moon-badge" id="moon-badge"></span>
                 </div>
                 <div class="ai-recommendation" id="ai-recommendation"></div>
                 <div class="planet-highlight" id="strongest-planet"></div>
