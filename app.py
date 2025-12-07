@@ -8,6 +8,9 @@ from functools import lru_cache
 
 app = Flask(__name__)
 
+# Configuration: Use Vedic time (day starts at sunrise) or Western time (midnight)
+USE_VEDIC_TIME = True  # Set to False for midnight-based day change
+
 def init_db():
     conn = sqlite3.connect('mantras.db')
     c = conn.cursor()
@@ -336,9 +339,17 @@ def get_planet_positions(date):
 def index():
     return render_template('index.html')
 
+def get_vedic_date():
+    """Get current date according to Vedic calendar (day starts at sunrise ~6 AM)"""
+    now = datetime.now()
+    if USE_VEDIC_TIME and now.hour < 6:
+        # Before sunrise, consider it previous day
+        return now - timedelta(days=1)
+    return now
+
 @app.route('/api/today')
 def today_mantra():
-    today = datetime.now()
+    today = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
     day_name = today.strftime('%A')
     nakshatra = get_nakshatra(today.timetuple().tm_yday)
     tithi = get_tithi(today)
@@ -364,6 +375,9 @@ def today_mantra():
     
     conn.close()
     
+    current_time = datetime.now()
+    time_info = f"Vedic Time (Day starts at sunrise)" if USE_VEDIC_TIME else "Standard Time (Day starts at midnight)"
+    
     return jsonify({
         'date': today.strftime('%Y-%m-%d'),
         'day': day_name,
@@ -371,6 +385,8 @@ def today_mantra():
         'tithi': tithi,
         'strongest_planet': strongest_planet,
         'planet_strength': planets[strongest_planet]['strength'],
+        'time_system': time_info,
+        'current_time': current_time.strftime('%I:%M %p'),
         'mantras': [{'id': m[0], 'name': m[1], 'sanskrit': m[2], 'transliteration': m[3],
                      'meaning': m[4], 'category': m[5], 'deity': m[6], 'benefits': m[7]} for m in mantras]
     })
@@ -389,7 +405,10 @@ def all_mantras():
 
 @app.route('/api/astro/<date_str>')
 def astro_data(date_str):
-    date = datetime.strptime(date_str, '%Y-%m-%d')
+    if date_str == datetime.now().strftime('%Y-%m-%d'):
+        date = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
+    else:
+        date = datetime.strptime(date_str, '%Y-%m-%d')
     nakshatra = get_nakshatra(date.timetuple().tm_yday)
     tithi = get_tithi(date)
     planets = get_planet_positions(date)

@@ -27,7 +27,7 @@ async function loadToday() {
     
     document.getElementById('nakshatra-badge').textContent = `Nakshatra: ${data.nakshatra}`;
     document.getElementById('tithi-badge').textContent = `Tithi: ${data.tithi}`;
-    document.getElementById('day-badge').textContent = data.day;
+    document.getElementById('day-badge').textContent = `${data.day} | ${data.current_time}`;
     
     // Display strongest planet
     if (data.strongest_planet) {
