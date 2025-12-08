@@ -33,10 +33,16 @@ async function loadToday() {
     
     document.getElementById('nakshatra-badge').textContent = `Nakshatra: ${data.nakshatra}`;
     document.getElementById('tithi-badge').textContent = `Tithi: ${data.tithi}`;
+    
     // Display client's actual time
-    const now = new Date();
-    const displayTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    document.getElementById('day-badge').textContent = `${data.day} | ${displayTime}`;
+    const updateTime = () => {
+        const now = new Date();
+        const displayTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        document.getElementById('day-badge').textContent = `${data.day} | ${displayTime}`;
+    };
+    updateTime();
+    // Update time every second
+    setInterval(updateTime, 1000);
     
     // Display location
     if (data.location) {
