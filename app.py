@@ -349,7 +349,18 @@ def get_vedic_date():
 
 @app.route('/api/today')
 def today_mantra():
-    today = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
+    from flask import request
+    
+    # Get client time from query parameter
+    client_time_str = request.args.get('client_time')
+    if client_time_str:
+        try:
+            today = datetime.fromisoformat(client_time_str.replace('Z', '+00:00')).replace(tzinfo=None)
+        except:
+            today = datetime.now()
+    else:
+        today = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
+    
     day_name = today.strftime('%A')
     nakshatra = get_nakshatra(today.timetuple().tm_yday)
     tithi = get_tithi(today)
@@ -375,7 +386,7 @@ def today_mantra():
     
     conn.close()
     
-    current_time = datetime.now()
+    current_time = today
     time_info = f"Vedic Time (Day starts at sunrise)" if USE_VEDIC_TIME else "Standard Time (Day starts at midnight)"
     
     # Get location and calculate sunrise/sunset
@@ -521,7 +532,16 @@ def all_mantras():
 
 @app.route('/api/astro/<date_str>')
 def astro_data(date_str):
-    if date_str == datetime.now().strftime('%Y-%m-%d'):
+    from flask import request
+    
+    # Get client time from query parameter
+    client_time_str = request.args.get('client_time')
+    if client_time_str:
+        try:
+            date = datetime.fromisoformat(client_time_str.replace('Z', '+00:00')).replace(tzinfo=None)
+        except:
+            date = datetime.now()
+    elif date_str == datetime.now().strftime('%Y-%m-%d'):
         date = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
     else:
         date = datetime.strptime(date_str, '%Y-%m-%d')

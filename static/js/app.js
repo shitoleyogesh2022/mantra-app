@@ -19,7 +19,9 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 // Load today's mantras
 async function loadToday() {
-    const response = await fetch('/api/today');
+    const now = new Date();
+    const clientTime = now.toISOString();
+    const response = await fetch(`/api/today?client_time=${encodeURIComponent(clientTime)}`);
     const data = await response.json();
     
     document.getElementById('current-date').textContent = new Date(data.date).toLocaleDateString('en-US', {
@@ -164,8 +166,10 @@ document.getElementById('next-month').addEventListener('click', () => {
 
 // Astrology
 async function loadAstrology() {
-    const today = new Date().toISOString().split('T')[0];
-    const response = await fetch(`/api/astro/${today}`);
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const clientTime = now.toISOString();
+    const response = await fetch(`/api/astro/${today}?client_time=${encodeURIComponent(clientTime)}`);
     const data = await response.json();
     
     // Display auspicious time
@@ -237,9 +241,11 @@ document.getElementById('search').addEventListener('input', (e) => {
 
 // Load Panchang data
 async function loadPanchang() {
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const clientTime = now.toISOString();
     try {
-        const response = await fetch(`/api/panchang/${today}`);
+        const response = await fetch(`/api/panchang/${today}?client_time=${encodeURIComponent(clientTime)}`);
         const data = await response.json();
         
         document.getElementById('ai-recommendation').innerHTML = `
