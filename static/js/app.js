@@ -20,8 +20,11 @@ document.querySelectorAll('.tab').forEach(tab => {
 // Load today's mantras
 async function loadToday() {
     const now = new Date();
-    const clientTime = now.toISOString();
-    const response = await fetch(`/api/today?client_time=${encodeURIComponent(clientTime)}`);
+    // Send local date and time separately for accuracy
+    const localDate = now.toLocaleDateString('en-CA'); // YYYY-MM-DD format
+    const localTime = now.toLocaleTimeString('en-US', { hour12: false }); // HH:MM:SS format
+    const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const response = await fetch(`/api/today?local_date=${localDate}&local_time=${localTime}&day_name=${dayName}`);
     const data = await response.json();
     
     document.getElementById('current-date').textContent = new Date(data.date).toLocaleDateString('en-US', {
@@ -30,7 +33,10 @@ async function loadToday() {
     
     document.getElementById('nakshatra-badge').textContent = `Nakshatra: ${data.nakshatra}`;
     document.getElementById('tithi-badge').textContent = `Tithi: ${data.tithi}`;
-    document.getElementById('day-badge').textContent = `${data.day} | ${data.current_time}`;
+    // Display client's actual time
+    const now = new Date();
+    const displayTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    document.getElementById('day-badge').textContent = `${data.day} | ${displayTime}`;
     
     // Display location
     if (data.location) {

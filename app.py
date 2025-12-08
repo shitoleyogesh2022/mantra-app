@@ -351,17 +351,22 @@ def get_vedic_date():
 def today_mantra():
     from flask import request
     
-    # Get client time from query parameter
-    client_time_str = request.args.get('client_time')
-    if client_time_str:
+    # Get client's local date and time
+    local_date = request.args.get('local_date')
+    local_time = request.args.get('local_time')
+    day_name = request.args.get('day_name')
+    
+    if local_date and local_time:
         try:
-            today = datetime.fromisoformat(client_time_str.replace('Z', '+00:00')).replace(tzinfo=None)
+            # Parse client's local date and time
+            today = datetime.strptime(f"{local_date} {local_time}", "%Y-%m-%d %H:%M:%S")
         except:
             today = datetime.now()
     else:
         today = get_vedic_date() if USE_VEDIC_TIME else datetime.now()
     
-    day_name = today.strftime('%A')
+    if not day_name:
+        day_name = today.strftime('%A')
     nakshatra = get_nakshatra(today.timetuple().tm_yday)
     tithi = get_tithi(today)
     planets = get_planet_positions(today)
