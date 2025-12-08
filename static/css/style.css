@@ -428,6 +428,10 @@ header h1 {
     min-height: 80px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .calendar-day:hover {
@@ -458,27 +462,31 @@ header h1 {
 
 .festival-badge {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 1.2em;
+    top: 2px;
+    right: 2px;
+    font-size: 1em;
 }
 
 .moon-icon {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    font-size: 1.2em;
+    top: 2px;
+    left: 2px;
+    font-size: 1em;
+    z-index: 1;
 }
 
 .day-number {
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: auto;
+    z-index: 2;
 }
 
 .day-nakshatra {
-    font-size: 0.8em;
+    font-size: 0.75em;
     opacity: 0.8;
+    margin-top: 2px;
+    z-index: 2;
 }
 
 .selected-info {
@@ -746,23 +754,33 @@ header h1 {
     }
     
     .calendar-day {
-        padding: 5px 2px;
-        min-height: 60px;
+        padding: 4px 2px;
+        min-height: 55px;
     }
     
     .day-number {
-        font-size: 1em;
+        font-size: 1.1em;
     }
     
     .day-nakshatra {
-        font-size: 0.6em;
+        font-size: 0.55em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        max-width: 100%;
     }
     
     .festival-badge, .moon-icon {
-        font-size: 0.9em;
+        font-size: 0.8em;
+        top: 1px;
+    }
+    
+    .festival-badge {
+        right: 1px;
+    }
+    
+    .moon-icon {
+        left: 1px;
     }
     
     .manifest-grid {
