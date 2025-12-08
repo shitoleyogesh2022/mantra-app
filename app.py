@@ -9,7 +9,7 @@ from functools import lru_cache
 app = Flask(__name__)
 
 # Configuration: Use Vedic time (day starts at sunrise) or Western time (midnight)
-USE_VEDIC_TIME = True  # Set to False for midnight-based day change
+USE_VEDIC_TIME = False  # Set to False for midnight-based day change
 
 def init_db():
     conn = sqlite3.connect('mantras.db')

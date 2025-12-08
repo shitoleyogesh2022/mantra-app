@@ -413,19 +413,21 @@ header h1 {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
+    gap: 5px;
     margin-bottom: 20px;
+    overflow-x: auto;
 }
 
 .calendar-day {
     background: var(--light);
-    padding: 15px;
-    border-radius: 10px;
+    padding: 8px 4px;
+    border-radius: 8px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s;
-    min-height: 100px;
+    min-height: 80px;
     position: relative;
+    overflow: hidden;
 }
 
 .calendar-day:hover {
@@ -740,20 +742,27 @@ header h1 {
     
     .calendar-grid {
         grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
+        gap: 3px;
     }
     
     .calendar-day {
-        padding: 8px;
-        min-height: 70px;
+        padding: 5px 2px;
+        min-height: 60px;
     }
     
     .day-number {
-        font-size: 1.2em;
+        font-size: 1em;
     }
     
     .day-nakshatra {
-        font-size: 0.7em;
+        font-size: 0.6em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .festival-badge, .moon-icon {
+        font-size: 0.9em;
     }
     
     .manifest-grid {
