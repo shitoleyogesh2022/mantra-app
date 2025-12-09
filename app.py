@@ -243,6 +243,57 @@ def init_db():
          "Annapurne Sadapurne Shankara-Prana-Vallabhe Jnana-Vairagya-Siddhyartham Bhiksham Dehi Cha Parvati",
          "O Annapurna, ever complete, beloved of Shankara, grant me the alms of knowledge and detachment",
          "Food,Abundance,Nourishment", "Annapurna", "Food security, nourishment, abundance", "All", "All", "Moon"),
+        
+        # Popular Chalisas and Stotras
+        ("Hanuman Chalisa (Opening)", "श्रीगुरु चरन सरोज रज निजमन मुकुरु सुधारि। बरनउं रघुबर बिमल जसु जो दायकु फल चारि।",
+         "Shri Guru Charan Saroj Raj Nija Mana Mukuru Sudhari Baranau Raghubar Bimal Jasu Jo Dayaku Phala Chari",
+         "With the dust of Guru's lotus feet, I cleanse the mirror of my mind and describe the pure glory of Raghubar which bestows the four fruits of life",
+         "Devotion,Hanuman,Chalisa", "Hanuman", "Strength, courage, devotion, removes obstacles", "Tuesday,Saturday,Hanuman Jayanti", "All", "Mars"),
+        
+        ("Ram Mantra", "ॐ श्री रामाय नमः",
+         "Om Shri Ramaya Namah",
+         "Salutations to Lord Rama",
+         "Devotion,Righteousness", "Rama", "Righteousness, courage, protection", "Sunday,Ram Navami", "All", "Sun"),
+        
+        ("Krishna Mantra", "ॐ श्री कृष्णाय नमः",
+         "Om Shri Krishnaya Namah",
+         "Salutations to Lord Krishna",
+         "Love,Devotion", "Krishna", "Divine love, joy, prosperity", "Wednesday,Janmashtami", "All", "Mercury"),
+        
+        ("Radha Krishna Mantra", "ॐ श्री राधा कृष्णाभ्यां नमः",
+         "Om Shri Radha Krishnabhyam Namah",
+         "Salutations to Radha and Krishna",
+         "Love,Devotion,Relationships", "Radha Krishna", "Divine love, harmonious relationships", "Wednesday,Janmashtami", "All", "Venus"),
+        
+        ("Sai Baba Mantra", "ॐ श्री साईं नाथाय नमः",
+         "Om Shri Sai Nathaya Namah",
+         "Salutations to Sai Baba",
+         "Faith,Miracles", "Sai Baba", "Faith, miracles, blessings", "Thursday", "All", "Jupiter"),
+        
+        ("Kartikeya Mantra", "ॐ शरवणभवाय नमः",
+         "Om Sharavanabhavaya Namah",
+         "Salutations to Lord Kartikeya (Murugan)",
+         "Victory,Courage", "Kartikeya", "Victory, courage, removes obstacles", "Tuesday", "Krittika", "Mars"),
+        
+        ("Parvati Mantra", "ॐ पार्वत्यै नमः",
+         "Om Parvatyai Namah",
+         "Salutations to Goddess Parvati",
+         "Marriage,Family", "Parvati", "Marital bliss, family harmony", "Monday,Friday", "All", "Moon"),
+        
+        ("Santana Gopala Mantra", "ॐ श्रीं ह्रीं क्लीं ग्लौं देवकीसुत गोविन्द वासुदेव जगत्पते देहि मे तनयं कृष्ण त्वामहं शरणं गतः",
+         "Om Shreem Hreem Kleem Glaum Devaki-Suta Govinda Vasudeva Jagatpate Dehi Me Tanayam Krishna Tvam Aham Sharanam Gatah",
+         "O Krishna, son of Devaki, Govinda, Vasudeva, Lord of the Universe, grant me a child, I surrender to you",
+         "Children,Family", "Krishna", "Blessings for children, family happiness", "Wednesday,Janmashtami", "All", "Jupiter"),
+        
+        ("Baglamukhi Mantra", "ॐ ह्लीं बगलामुखी सर्व दुष्टानां वाचं मुखं पदं स्तम्भय जिव्हां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा",
+         "Om Hleem Baglamukhi Sarva Dushtanam Vacham Mukham Padam Stambhaya Jivham Kilaya Buddhim Vinashaya Hleem Om Swaha",
+         "O Baglamukhi, paralyze the speech, face and feet of all evil people, silence their tongue and destroy their intellect",
+         "Protection,Victory", "Baglamukhi", "Protection from enemies, victory in disputes", "Tuesday", "All", "Mars"),
+        
+        ("Kuber Mantra", "ॐ यक्षाय कुबेराय वैश्रवणाय धनधान्याधिपतये धनधान्य समृद्धिं मे देहि दापय स्वाहा",
+         "Om Yakshaya Kuberaya Vaishravanaya Dhana-Dhanyaadhipataye Dhana-Dhanya Samriddhim Me Dehi Dapaya Swaha",
+         "O Kuber, lord of wealth and prosperity, bestow upon me abundance of wealth and grains",
+         "Wealth,Prosperity", "Kuber", "Wealth, prosperity, financial abundance", "Friday,Dhanteras", "All", "Venus"),
     ]
     
     c.executemany('INSERT OR IGNORE INTO mantras VALUES (NULL,?,?,?,?,?,?,?,?,?,?)', mantras)

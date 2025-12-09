@@ -65,6 +65,82 @@ body::after {
     animation: galaxyMove 200s linear infinite;
 }
 
+/* Orbiting Planets */
+.planet {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+.planet-sun {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #ffd700, #ff8c00);
+    top: 15%;
+    left: 50%;
+    box-shadow: 0 0 30px #ffd700;
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.planet-moon {
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle, #e8e8e8, #a0a0a0);
+    animation: orbit1 30s linear infinite;
+    transform-origin: -150px center;
+}
+
+.planet-mars {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ff6b6b, #c92a2a);
+    animation: orbit2 45s linear infinite;
+    transform-origin: -200px center;
+}
+
+.planet-venus {
+    width: 22px;
+    height: 22px;
+    background: radial-gradient(circle, #ffd93d, #f9ca24);
+    animation: orbit3 60s linear infinite;
+    transform-origin: -250px center;
+}
+
+.planet-jupiter {
+    width: 35px;
+    height: 35px;
+    background: radial-gradient(circle, #f39c12, #d68910);
+    animation: orbit4 80s linear infinite;
+    transform-origin: -300px center;
+}
+
+@keyframes orbit1 {
+    from { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+}
+
+@keyframes orbit2 {
+    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+@keyframes orbit3 {
+    from { transform: rotate(0deg) translateX(250px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(250px) rotate(-360deg); }
+}
+
+@keyframes orbit4 {
+    from { transform: rotate(0deg) translateX(300px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 30px #ffd700; }
+    50% { transform: scale(1.1); box-shadow: 0 0 50px #ffd700; }
+}
+
 @keyframes galaxyMove {
     0% { background-position: 0% 0%, 40% 40%, 50% 50%, 60% 60%, 70% 70%, 80% 80%, 90% 90%; }
     100% { background-position: 100% 100%, 140% 140%, 150% 150%, 160% 160%, 170% 170%, 180% 180%, 190% 190%; }
@@ -73,25 +149,57 @@ body::after {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 100px rgba(138, 43, 226, 0.3);
     overflow: hidden;
     position: relative;
-    z-index: 1;
+    z-index: 10;
 }
 
 header {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
-        linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
     color: white;
     padding: 30px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 180px;
+}
+
+.header-planets {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.header-planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -0.75em 0 0 -0.75em;
+    font-size: 1.5em;
+    opacity: 0.9;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.hp-sun { animation: orbit-circle 20s; }
+.hp-moon { animation: orbit-circle 20s; animation-delay: -2.22s; }
+.hp-mars { animation: orbit-circle 20s; animation-delay: -4.44s; }
+.hp-mercury { animation: orbit-circle 20s; animation-delay: -6.66s; }
+.hp-jupiter { animation: orbit-circle 20s; animation-delay: -8.88s; }
+.hp-venus { animation: orbit-circle 20s; animation-delay: -11.1s; }
+.hp-saturn { animation: orbit-circle 20s; animation-delay: -13.32s; }
+.hp-rahu { animation: orbit-circle 20s; animation-delay: -15.54s; }
+.hp-ketu { animation: orbit-circle 20s; animation-delay: -17.76s; }
+
+@keyframes orbit-circle {
+    0% { transform: rotate(0deg) translateX(220px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(220px) rotate(-360deg); }
 }
 
 header::before {
@@ -112,6 +220,10 @@ header::before {
 header h1 {
     font-size: 2.5em;
     margin-bottom: 10px;
+}
+
+.om-symbol {
+    display: inline-block;
 }
 
 .tagline {
@@ -791,6 +903,8 @@ header h1 {
         font-size: 8em;
         right: 10%;
     }
+    
+    .planet { display: none; }
 }
 
 /* Cosmic animations */
@@ -809,36 +923,9 @@ header h1 {
     50% { box-shadow: 0 15px 40px rgba(138, 43, 226, 0.6), 0 0 60px rgba(138, 43, 226, 0.2); }
 }
 
-/* Vedic symbols decoration */
-.tab-content::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, rgba(138, 43, 226, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
 
-/* Cosmic particles effect */
-.container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        radial-gradient(2px 2px at 10% 20%, rgba(138, 43, 226, 0.3), transparent),
-        radial-gradient(2px 2px at 90% 80%, rgba(255, 215, 0, 0.3), transparent),
-        radial-gradient(1px 1px at 50% 50%, rgba(138, 43, 226, 0.2), transparent);
-    background-size: 100% 100%;
-    opacity: 0.3;
-    pointer-events: none;
-    animation: particleFloat 20s ease-in-out infinite;
-}
+
+
 
 @keyframes particleFloat {
     0%, 100% { transform: translateY(0px); }

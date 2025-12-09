@@ -7,9 +7,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Orbiting Planets -->
+    <div class="planet planet-sun"></div>
+    <div class="planet planet-moon"></div>
+    <div class="planet planet-mars"></div>
+    <div class="planet planet-venus"></div>
+    <div class="planet planet-jupiter"></div>
+    
     <div class="container">
         <header>
-            <h1>🕉️ Divine Mantras</h1>
+            <div class="header-planets">
+                <div class="header-planet hp-sun">☀️</div>
+                <div class="header-planet hp-moon">🌙</div>
+                <div class="header-planet hp-mars">🔴</div>
+                <div class="header-planet hp-mercury">☿</div>
+                <div class="header-planet hp-jupiter">🪐</div>
+                <div class="header-planet hp-venus">♀</div>
+                <div class="header-planet hp-saturn">🪐</div>
+                <div class="header-planet hp-rahu">🌑</div>
+                <div class="header-planet hp-ketu">☄️</div>
+            </div>
+            <h1><span class="om-symbol">🕉️</span> Divine Mantras</h1>
             <p class="tagline">Ancient Wisdom for Modern Life</p>
             <div class="time-controls">
                 <button id="time-toggle" class="time-btn" title="Toggle between Vedic (sunrise-based) and Western (midnight-based) time system">🌅 Vedic Time</button>

@@ -248,7 +248,29 @@ document.getElementById('search').addEventListener('input', (e) => {
         m.category.toLowerCase().includes(query) ||
         m.benefits.toLowerCase().includes(query)
     );
-    displayMantras(filtered);
+    
+    if (filtered.length === 0 && query.length > 0) {
+        // Show helpful message when no results
+        const container = document.getElementById('all-mantras');
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <h3>No results found for "${query}"</h3>
+                <p style="margin: 20px 0;">We currently have mantras for:</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Ganesha</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Hanuman</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Shiva</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Lakshmi</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Saraswati</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Durga</span>
+                    <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">Vishnu</span>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9em;">Try searching for deity names, benefits (wealth, health, peace), or categories (Vedic, planetary)</p>
+            </div>
+        `;
+    } else {
+        displayMantras(filtered);
+    }
 });
 
 // Load Panchang data
